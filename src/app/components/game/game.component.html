@@ -1,0 +1,58 @@
+<div class="background-container">
+  <div class="content">
+    <div class="game-container">
+      <div class="logo-section">
+        <img src="assets/images/LogoTelefunken.png" alt="Telefunken Logo" class="game-logo">
+        <h1>TELEFUNKEN</h1>
+      </div>
+
+      <div class="round-info">
+        <h2>Ronda actual: {{currentRound}}</h2>
+        <p>Jugador: {{playerName}}</p>
+      </div>
+
+      <!-- Sección para ingresar puntaje -->
+      <div class="score-input">
+        <label>Ingresa tu puntaje para esta ronda:</label>
+        <input type="number" [(ngModel)]="currentScore" placeholder="Puntaje" class="custom-input">
+        <button class="action-button" (click)="submitScore()" [disabled]="currentScore === null">
+          REGISTRAR PUNTAJE
+        </button>
+      </div>
+
+      <!-- Tabla de puntuaciones -->
+      <div class="scores-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Jugador</th>
+              <th *ngFor="let round of rounds">{{round}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let player of players">
+              <td>{{player.playerName}}</td>
+              <td *ngFor="let round of rounds">
+                {{player.scores[round] || 0}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Controles del anfitrión -->
+      <div class="host-controls" *ngIf="isHost">
+        <button class="action-button next-button" 
+                (click)="nextRound()" 
+                [disabled]="currentRound === rounds[rounds.length - 1]">
+          SIGUIENTE RONDA
+        </button>
+      </div>
+
+      <!-- Botón para salir -->
+      <button class="action-button cancel-button" (click)="leaveGame()">
+        SALIR DEL JUEGO
+      </button>
+    </div>
+  </div>
+</div>

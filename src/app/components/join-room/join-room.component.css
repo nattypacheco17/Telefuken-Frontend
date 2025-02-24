@@ -1,0 +1,228 @@
+/* Reset y estilos globales */
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Fondo con animación */
+.background-container {
+    width: 100%;
+    height: 100vh;
+    background-image: url('/assets/images/background.png');
+    background-size: cover;
+    background-position: center;
+    animation: move-background 60s linear infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Contenedor de la tarjeta */
+.card-container {
+    background: #9848f582;
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.20);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Logo y título */
+.logo-text {
+    text-align: center;
+    margin-bottom: 30px;
+
+    h1 {
+        color: #bd00ce;
+        font-size: 2rem;
+        margin: 10px 0;
+    }
+
+    .logo {
+        width: 80px;
+        height: auto;
+        margin: 10px 0;
+    }
+}
+
+/* Contenedor del formulario */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+        color: white;
+        font-size: 1rem;
+    }
+}
+
+.custom-input {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #bd00ce;
+    }
+}
+
+/* Estilos para los botones */
+.play-button {
+    background-color: #6000ce;
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+
+    &:hover:not(:disabled) {
+        background-color: #9848f5;
+        transform: translateY(-5px);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.back-button {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    width: auto;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateX(-50%) scale(1.05);
+    }
+}
+
+/* mensajes de error*/
+.error-message {
+    color: #ff4444;
+    background-color: rgba(255, 68, 68, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  .input-group input {
+    text-transform: uppercase;
+  }
+
+/* Animaciones */
+@keyframes move-background {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    50% {
+        background-position: 100% 100%;
+    }
+
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animated-button {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+/* Media Queries */
+@media (max-width: 480px) {
+    .card-container {
+        width: 85%;
+        padding: 20px;
+        padding-bottom: 80px;
+    }
+
+    .logo-text {
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+
+    .instructions {
+        font-size: 1rem;
+    }
+
+    .logo {
+        width: 60px;
+    }
+
+    .play-button,
+    .back-button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}

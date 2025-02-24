@@ -1,0 +1,49 @@
+<div class="background-container">
+    <div class="content">
+        <div class="card-container">
+            <div class="logo-section">
+                <img src="assets/images/LogoTelefunken.png" alt="Telefunken Logo" class="game-logo">
+                <h1>TELEFUNKEN</h1>
+            </div>
+
+            <!-- Información común para todos -->
+            <div class="player-info">
+                <p>Tu nombre: {{playerName}}</p>
+            </div>
+
+            <!-- Controles solo para el anfitrión -->
+            <div class="host-controls" *ngIf="isHost">
+                <div class="code-section">
+                    <p>Código de la sala: {{roomCode}}</p>
+                    <button class="action-button copy-button" (click)="copyCode()">
+                        COPIAR CÓDIGO
+                    </button>
+                </div>
+
+                <div class="players-info">
+                    <p>Jugadores conectados: {{currentPlayers}}/{{maxPlayers}}</p>
+                    <ul class="players-list">
+                        <li *ngFor="let player of connectedPlayers">{{player}}</li>
+                    </ul>
+                </div>
+
+                <button class="action-button play-button" [disabled]="currentPlayers < maxPlayers"
+                    (click)="startGame()">
+                    COMENZAR JUEGO
+                </button>
+            </div>
+
+            <!-- Vista para jugadores no anfitriones -->
+            <div class="player-view" *ngIf="!isHost">
+                <p class="waiting-message">
+                    Esperando a que el anfitrión inicie el juego...
+                </p>
+            </div>
+
+            <!-- Botón de salir para todos -->
+            <button class="action-button cancel-button" (click)="cancelGame()">
+                SALIR DE LA SALA
+            </button>
+        </div>
+    </div>
+</div>
