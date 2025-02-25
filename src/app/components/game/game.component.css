@@ -14,13 +14,22 @@
 }
 
 .game-logo {
-  max-width: 200px;
+  max-width: 100px;
   height: auto;
 }
 
 .round-info {
   text-align: center;
   margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.round-info h2 {
+  margin-bottom: 0.5rem;
+  color: #333;
 }
 
 .score-input {
@@ -29,14 +38,31 @@
   gap: 1rem;
   margin-bottom: 2rem;
   align-items: center;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.score-input label {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
 }
 
 .custom-input {
-  padding: 0.5rem;
+  padding: 0.75rem 1rem;
   border: 2px solid #ccc;
   border-radius: 5px;
   font-size: 1.1rem;
   width: 200px;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+.custom-input:focus {
+  border-color: #4CAF50;
+  outline: none;
 }
 
 .scores-table {
@@ -74,6 +100,25 @@ td {
   color: #666;
 }
 
+.player-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.total-score {
+  font-weight: 600;
+  background-color: #f8f9fa;
+}
+
+.current-round {
+  background-color: #e8f5e9;
+}
+
+.scored {
+  font-weight: 600;
+  color: #333;
+}
+
 tr:first-child th:first-child {
   border-top-left-radius: 8px;
 }
@@ -97,6 +142,7 @@ tr:last-child td:last-child {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-width: 180px;
 }
 
 .action-button:disabled {
@@ -111,6 +157,8 @@ tr:last-child td:last-child {
 
 .next-button:hover:not(:disabled) {
   background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .cancel-button {
@@ -121,10 +169,29 @@ tr:last-child td:last-child {
 
 .cancel-button:hover {
   background-color: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .host-controls {
   display: flex;
   justify-content: center;
   margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .scores-table {
+    overflow-x: auto;
+  }
+  
+  .custom-input {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .action-button {
+    width: 100%;
+    max-width: 250px;
+  }
 }

@@ -28,15 +28,13 @@ export class CreateRoomComponent {
         roomName: 'Sala de ' + this.playerName,
         playerName: this.playerName,
         numPlayers: this.numPlayers,
-        avatar: 'default'
       });
       
-      // Al crear la sala, marcamos al jugador como anfitrión
       this.router.navigate(['/waiting-room', roomCode], {
         state: {
           playerName: this.playerName,
           maxPlayers: this.numPlayers,
-          isHost: true  // Marcamos explícitamente como anfitrión
+          isHost: true 
         }
       });
     } catch (error) {

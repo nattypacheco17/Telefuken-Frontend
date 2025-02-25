@@ -27,14 +27,17 @@
             <tr>
               <th>Jugador</th>
               <th *ngFor="let round of rounds">{{round}}</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let player of players">
-              <td>{{player.playerName}}</td>
-              <td *ngFor="let round of rounds">
-                {{player.scores[round] || 0}}
+              <td class="player-name">{{player.playerName}}</td>
+              <td *ngFor="let round of rounds" 
+                  [ngClass]="{'current-round': round === currentRound, 'scored': player.scores[round] !== undefined}">
+                {{player.scores[round] !== undefined ? player.scores[round] : '-'}}
               </td>
+              <td class="total-score">{{player.total}}</td>
             </tr>
           </tbody>
         </table>

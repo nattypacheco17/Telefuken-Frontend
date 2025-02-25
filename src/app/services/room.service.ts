@@ -1,4 +1,3 @@
-// src/app/services/room.service.ts
 import { Injectable } from '@angular/core';
 import { Socket, io } from 'socket.io-client';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -34,6 +33,14 @@ export class RoomService {
     this.socket.on('roomUpdate', (room: Room) => {
       this.currentRoom.next(room);
     });
+
+    this.socket.on('connect', () => {
+      console.log('Conectado al servidor de Socket.IO');
+    });
+
+    this.socket.on('connect_error', (error: any) => {
+      console.error('Error de conexión con Socket.IO:', error);
+    });
   }
 
   // Crear una nueva sala
@@ -41,33 +48,32 @@ export class RoomService {
     roomName: string;
     playerName: string;
     numPlayers: number;
-    avatar: string;
   }): Promise<string> {
     return new Promise((resolve) => {
       this.socket.emit('createRoom', data, ({ code }: { code: string }) => {
+        console.log('Sala creada con código:', code);
         resolve(code);
       });
     });
   }
 
   // Unirse a una sala existente
-joinRoom(data: {
-  roomCode: string;
-  playerName: string;
-  avatar: string;
-}): Promise<{ success: boolean; message?: string }> {
-  return new Promise((resolve) => {
-      // Agregamos un timeout para evitar que la promesa se quede colgada
+  joinRoom(data: {
+    roomCode: string;
+    playerName: string;
+    avatar: string;
+  }): Promise<{ success: boolean; message?: string }> {
+    return new Promise((resolve) => {
       const timeout = setTimeout(() => {
-          resolve({ success: false, message: 'Tiempo de espera agotado' });
+        resolve({ success: false, message: 'Tiempo de espera agotado' });
       }, 5000);
 
       this.socket.emit('joinRoom', data, (response: { success: boolean; message?: string }) => {
-          clearTimeout(timeout);
-          resolve(response);
+        clearTimeout(timeout);
+        resolve(response);
       });
-  });
-}
+    });
+  }
 
   // Observables para eventos del juego
   onPlayerJoined(): Observable<Player> {
@@ -162,54 +168,62 @@ joinRoom(data: {
     });
   }
 
-// Añadir al RoomService
-advanceRound(roundIndex: number) {
-  this.socket.emit('advanceRound', roundIndex);
-}
+  advanceRound(data: { roomCode: string, roundIndex: number }): void {
+    console.log('Enviando evento para avanzar a la ronda:', data);
+    this.socket.emit('advanceRound', data);
+  }
 
-onRoundChange(): Observable<number> {
-  return new Observable(observer => {
-    this.socket.on('roundChanged', (roundIndex: number) => {
-      observer.next(roundIndex);
+  onRoundChange(): Observable<number> {
+    return new Observable(observer => {
+      this.socket.on('roundChanged', (roundIndex: number) => {
+        console.log('Evento roundChanged recibido:', roundIndex);
+        observer.next(roundIndex);
+      });
     });
-  });
-}
+  }
 
-onGameStart(): Observable<void> {
-  return new Observable(observer => {
-    this.socket.on('gameStart', () => {
-      observer.next();
+  onGameStart(): Observable<void> {
+    return new Observable(observer => {
+      this.socket.on('gameStart', () => {
+        observer.next();
+      });
     });
-  });
-}
+  }
 
-
-startGame(roomCode: string): Promise<boolean> {
-  return new Promise((resolve) => {
-    this.socket.emit('startGame', { roomCode }, (response: { success: boolean }) => {
-      resolve(response.success);
+  startGame(roomCode: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.socket.emit('startGame', { roomCode }, (response: { success: boolean }) => {
+        resolve(response.success);
+      });
     });
-  });
-}
+  }
 
-
-onGameStarted(): Observable<void> {
-  return new Observable(observer => {
-    this.socket.on('gameStarted', () => {
-      observer.next();
+  onGameStarted(): Observable<void> {
+    return new Observable(observer => {
+      this.socket.on('gameStarted', () => {
+        observer.next();
+      });
     });
-  });
-}
+  }
 
-
-// room.service.ts
-// Añade este método si no lo tienes
-getCurrentPlayers(roomCode: string): Observable<any[]> {
-  return new Observable(observer => {
-    this.socket.emit('getPlayers', roomCode, (players: any[]) => {
-      observer.next(players);
+  getCurrentPlayers(roomCode: string): Observable<any[]> {
+    return new Observable(observer => {
+      this.socket.emit('getPlayers', roomCode, (players: any[]) => {
+        observer.next(players);
+      });
     });
-  });
-}
+  }
 
+  requestPlayersList(roomCode: string): void {
+    this.socket.emit('requestPlayersList', { roomCode });
+  }
+
+  onPlayersListUpdate(): Observable<string[]> {
+    return new Observable(observer => {
+      this.socket.on('playersListUpdate', (playersList: string[]) => {
+        console.log('Lista de jugadores actualizada recibida:', playersList);
+        observer.next(playersList);
+      });
+    });
+  }
 }
