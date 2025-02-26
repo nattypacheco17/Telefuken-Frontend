@@ -16,7 +16,7 @@ interface PlayerScore {
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, FormsModule, FileComponent],  
+  imports: [CommonModule, FormsModule, FileComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.css'
 })
@@ -254,4 +254,5 @@ export class GameComponent implements OnInit, OnDestroy {
     this.roomService.leaveRoom(this.roomCode);
     this.router.navigate(['/']);
   }
+
 }
