@@ -4,17 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RoomService } from '../../services/room.service';
 import { Subscription } from 'rxjs';
+import { FileComponent } from '../file/file.component';  // Se importa el componente de fichas
 
 interface PlayerScore {
   playerName: string;
   scores: { [key: string]: number };
   total: number;
+  fichasRestantes: number;  // Se agrega la propiedad para las fichas
 }
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FileComponent],  
   templateUrl: './game.component.html',
   styleUrl: './game.component.css'
 })
@@ -70,7 +72,6 @@ export class GameComponent implements OnInit, OnDestroy {
     const playersListSub = this.roomService.onPlayersListUpdate().subscribe(playersList => {
       console.log('Lista actualizada de jugadores recibida:', playersList);
       this.connectedPlayers = playersList;
-
       this.updatePlayersList();
     });
     this.subscriptions.push(playersListSub);
@@ -96,7 +97,7 @@ export class GameComponent implements OnInit, OnDestroy {
       if (roundIndex >= 0 && roundIndex < this.rounds.length) {
         this.currentRound = this.rounds[roundIndex];
         console.log(`Ronda actual cambiada a: ${this.currentRound}`);
-        this.currentScore = null; 
+        this.currentScore = null;
       } else {
         console.error('Índice de ronda inválido:', roundIndex);
       }
@@ -112,11 +113,12 @@ export class GameComponent implements OnInit, OnDestroy {
     this.players = [];
 
     if (this.connectedPlayers && this.connectedPlayers.length > 0) {
-      for (const playerName of this.connectedPlayers) {
+      for (const name of this.connectedPlayers) {
         this.players.push({
-          playerName: playerName,
+          playerName: name,
           scores: {},
-          total: 0
+          total: 0,
+          fichasRestantes: 10  // Inicializamos con 10 fichas
         });
       }
       console.log('Jugadores inicializados:', this.players);
@@ -124,29 +126,32 @@ export class GameComponent implements OnInit, OnDestroy {
       this.players.push({
         playerName: this.playerName,
         scores: {},
-        total: 0
+        total: 0,
+        fichasRestantes: 10  // Inicializamos con 10 fichas
       });
       console.log('Solo se ha inicializado el jugador actual:', this.players);
     }
   }
 
-  // Actualiza la lista de jugadores manteniendo las puntuaciones existentes
+  // Actualiza la lista de jugadores manteniendo las puntuaciones y fichas existentes
   private updatePlayersList() {
-    const scoresMap = new Map<string, { scores: { [key: string]: number }, total: number }>();
+    const scoresMap = new Map<string, { scores: { [key: string]: number }, total: number, fichasRestantes: number }>();
 
     this.players.forEach(player => {
       scoresMap.set(player.playerName, {
         scores: { ...player.scores },
-        total: player.total
+        total: player.total,
+        fichasRestantes: player.fichasRestantes
       });
     });
 
-    this.players = this.connectedPlayers.map(playerName => {
-      const existingScores = scoresMap.get(playerName);
+    this.players = this.connectedPlayers.map(name => {
+      const existing = scoresMap.get(name);
       return {
-        playerName,
-        scores: existingScores ? existingScores.scores : {},
-        total: existingScores ? existingScores.total : 0
+        playerName: name,
+        scores: existing ? existing.scores : {},
+        total: existing ? existing.total : 0,
+        fichasRestantes: existing ? existing.fichasRestantes : 10  // Valor por defecto
       };
     });
 
@@ -155,6 +160,27 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private getPlayerIndex(playerName: string): number {
     return this.players.findIndex(p => p.playerName === playerName);
+  }
+
+  // Función para manejar la selección de una ficha
+  manejarFichaSeleccionada(event: { jugador: string }) {
+    if (event.jugador === this.playerName) {
+      const index = this.getPlayerIndex(this.playerName);
+      if (index !== -1 && this.players[index].fichasRestantes > 0) {
+        this.players[index].fichasRestantes--;
+      }
+    }
+  }
+
+  // Verifica si el jugador existe en la lista
+  existeJugador(playerName: string): boolean {
+    return this.players.some(p => p.playerName === playerName);
+  }
+
+  // Obtiene el número de fichas restantes para un jugador
+  getFichasRestantes(playerName: string): number {
+    const player = this.players.find(p => p.playerName === playerName);
+    return player ? player.fichasRestantes : 0;
   }
 
   // Envía la puntuación del jugador actual
@@ -179,6 +205,7 @@ export class GameComponent implements OnInit, OnDestroy {
       if (playerIndex !== -1) {
         this.players[playerIndex].scores[this.currentRound] = this.currentScore;
         this.updateTotalScore(playerIndex);
+        console.log(`Puntuación actualizada para ${this.playerName} en ronda ${this.currentRound}: ${this.currentScore}`);
       }
 
       // Reseteamos el input después de enviar
@@ -197,7 +224,6 @@ export class GameComponent implements OnInit, OnDestroy {
       if (nextIndex < this.rounds.length) {
         console.log(`Intentando avanzar a la ronda: ${this.rounds[nextIndex]} (índice ${nextIndex})`);
 
-        // Enviamos el índice de la siguiente ronda y el código de sala
         this.roomService.advanceRound({
           roomCode: this.roomCode,
           roundIndex: nextIndex

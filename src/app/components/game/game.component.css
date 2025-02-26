@@ -18,6 +18,11 @@
   height: auto;
 }
 
+.file-styles{
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
 .round-info {
   text-align: center;
   margin-bottom: 2rem;
@@ -184,12 +189,12 @@ tr:last-child td:last-child {
   .scores-table {
     overflow-x: auto;
   }
-  
+
   .custom-input {
     width: 100%;
     max-width: 200px;
   }
-  
+
   .action-button {
     width: 100%;
     max-width: 250px;
