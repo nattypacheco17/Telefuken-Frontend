@@ -64,28 +64,7 @@ text-align: center;
 .logo {
   max-width: 150px;
   height: auto;
-  animation: fadeIn 1s ease-out;
 }
-
-/* Contenedor del texto */
-.text-container {
-  background: #2101719a;
-  padding: 20px 70px;
-  border-radius: 10px;
-  display: inline-block;
-  margin-bottom: 30px;
-}
-
-/* Estilo del título */
-h1 {
-  font-size: 4rem;
-  font-weight: bold;
-  margin: 0;
-  animation: fade-in 3s infinite;
-  color: white;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-
 
 .round-info {
   text-align: center;
@@ -450,23 +429,5 @@ tr:last-child td:last-child {
   .action-button {
     width: 100%;
     max-width: 250px;
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 2.5rem;
-  }
-
-  .text-container {
-    padding: 10px 30px;
-  }
-
-  .form-container {
-    width: 250px;
-  }
-
-  .logo {
-    max-width: 160px;
   }
 }

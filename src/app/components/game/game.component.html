@@ -20,6 +20,16 @@
         <p>Jugador: {{playerName}}</p>
       </div>
 
+      <!-- Sección de fichas -->
+      <div class="file-styles" *ngIf="existeJugador(playerName)">
+        <h3>Fichas Restantes: {{ getFichasRestantes(playerName) }}</h3>
+        <app-file
+          [fichasRestantes]="getFichasRestantes(playerName)"
+          [jugador]="playerName"
+          (fichaSeleccionada)="manejarFichaSeleccionada($event)">
+        </app-file>
+      </div>
+
       <!-- Sección para ingresar puntaje -->
       <div class="score-input">
         <label>Ingresa tu puntaje para esta ronda:</label>
@@ -43,7 +53,7 @@
             <tr *ngFor="let player of players">
               <td class="player-name">{{player.playerName}}</td>
               <td *ngFor="let round of rounds"
-                [ngClass]="{'current-round': round === currentRound, 'scored': player.scores[round] !== undefined}">
+                  [ngClass]="{'current-round': round === currentRound, 'scored': player.scores[round] !== undefined}">
                 {{player.scores[round] !== undefined ? player.scores[round] : '-'}}
               </td>
               <td class="total-score">{{player.total}}</td>
@@ -54,8 +64,9 @@
 
       <!-- Controles del anfitrión -->
       <div class="host-controls" *ngIf="isHost">
-        <button class="action-button next-button" (click)="nextRound()"
-          [disabled]="currentRound === rounds[rounds.length - 1]">
+        <button class="action-button next-button"
+                (click)="nextRound()"
+                [disabled]="currentRound === rounds[rounds.length - 1]">
           SIGUIENTE RONDA
         </button>
       </div>
