@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RoomService } from '../../services/room.service';
-
+import { MusicPlayerComponent } from '../music-player/music-player.component';
+ import { MusicPlayerService } from '../../services/music-player.service';
+import { HelpButtonComponent } from '../help-button/help-button.component';
 @Component({
   selector: 'app-join-room',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,MusicPlayerComponent,HelpButtonComponent],
   templateUrl: './join-room.component.html',
   styleUrl: './join-room.component.css'
 })
@@ -18,7 +20,8 @@ export class JoinRoomComponent {
 
   constructor(
     private router: Router,
-    private roomService: RoomService
+    private roomService: RoomService,
+   public musicService: MusicPlayerService
   ) { }
 
   async joinRoom() {

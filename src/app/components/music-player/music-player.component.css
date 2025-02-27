@@ -1,0 +1,22 @@
+.music-player {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 5px;
+}
+button {
+  padding: 15px 15px;
+  font-size: 32px;
+  border: none;
+  cursor: pointer;
+  background: #ffffff;
+  border: 1px solid #6403d4;
+  border-radius: 50%;
+}
+button:hover {
+  background: #6403d4;
+  border: 1px solid #ffffff;
+
+
+}

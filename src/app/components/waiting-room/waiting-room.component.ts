@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RoomService } from '../../services/room.service';
 import { Subscription } from 'rxjs';
+import { MusicPlayerComponent } from '../music-player/music-player.component';
+import { MusicPlayerService } from '../../services/music-player.service';
+import { HelpButtonComponent } from '../help-button/help-button.component';
 
 @Component({
   selector: 'app-waiting-room',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MusicPlayerComponent,HelpButtonComponent],
   templateUrl: './waiting-room.component.html',
   styleUrl: './waiting-room.component.css'
 })
@@ -24,7 +27,8 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private roomService: RoomService
+    private roomService: RoomService,
+    public musicService: MusicPlayerService
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {

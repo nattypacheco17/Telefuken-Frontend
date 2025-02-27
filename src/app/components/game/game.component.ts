@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RoomService } from '../../services/room.service';
 import { Subscription } from 'rxjs';
+import { MusicPlayerService } from '../../services/music-player.service';
+import { MusicPlayerComponent } from '../music-player/music-player.component';
+import { HelpButtonComponent } from '../help-button/help-button.component';
 
 interface PlayerScore {
   playerName: string;
@@ -14,7 +17,7 @@ interface PlayerScore {
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MusicPlayerComponent,HelpButtonComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.css'
 })
@@ -33,11 +36,17 @@ export class GameComponent implements OnInit, OnDestroy {
 
   // Para gestionar suscripciones
   private subscriptions: Subscription[] = [];
+  mostrarResultado = false;
+  mensajeGanador = '';
+  puntosGanador: number = 0;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private roomService: RoomService
+    private roomService: RoomService,
+    public musicService: MusicPlayerService
+
+
   ) {
     // Recuperamos los datos del state de la navegación
     const navigation = this.router.getCurrentNavigation();
@@ -96,7 +105,7 @@ export class GameComponent implements OnInit, OnDestroy {
       if (roundIndex >= 0 && roundIndex < this.rounds.length) {
         this.currentRound = this.rounds[roundIndex];
         console.log(`Ronda actual cambiada a: ${this.currentRound}`);
-        this.currentScore = null; 
+        this.currentScore = null;
       } else {
         console.error('Índice de ronda inválido:', roundIndex);
       }
@@ -188,6 +197,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
+
   // Avanza a la siguiente ronda (solo para el anfitrión)
   nextRound() {
     if (this.isHost) {
@@ -222,10 +232,47 @@ export class GameComponent implements OnInit, OnDestroy {
     this.players[playerIndex].total = total;
   }
 
+
+  verResultados() {
+    const resultado = this.ganador(); // Llama a la función que determina el ganador
+    this.mensajeGanador = resultado.nombre;
+    this.puntosGanador = resultado.puntaje;
+    this.mostrarResultado = true;
+  }
+
+  cerrarResultado() {
+    this.mostrarResultado = false;
+  }
+
+  ganador() {
+    let ganador = this.players[0].playerName;
+    let score = this.players[0].total;
+
+    for (let i = 1; i < this.players.length; i++) {
+      if (this.players[i].total < score) { // Corregido para que el mayor puntaje gane
+        ganador = this.players[i].playerName;
+        score = this.players[i].total;
+      }
+    }
+
+    return { nombre: ganador, puntaje: score }; // Retorna un objeto con el nombre y puntaje
+  }
+
+
+
   // Sale del juego y vuelve al inicio
   leaveGame() {
     console.log('Saliendo del juego');
     this.roomService.leaveRoom(this.roomCode);
     this.router.navigate(['/']);
+    this.ganador();
+  }
+
+  playMusic() {
+    this.musicService.play();
+  }
+
+  pauseMusic() {
+    this.musicService.pause();
   }
 }
