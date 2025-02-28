@@ -1,8 +1,8 @@
 /* Botón de ayuda flotante */
 .help-btn {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  top: 20px;  /* Ajusta la distancia desde la parte superior */
+  left: 20px; /* Ajusta la distancia desde la izquierda */
   padding: 10px 15px;
   font-size: 16px;
   background: #ff9800;
@@ -45,6 +45,8 @@
 
 .modal-content h2 {
   margin-top: 0;
+  font-size: 20px;
+  color: #6403d4;
 }
 
 .modal-content button {
@@ -59,3 +61,4 @@
 .modal-content button:hover {
   background: #8215ff;
 }
+
