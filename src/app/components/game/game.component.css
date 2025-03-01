@@ -114,6 +114,7 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   margin: 15px 0;
   border: 2px solid rgba(40, 14, 73, 0.6);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .file-styles h3 {
@@ -177,7 +178,7 @@
  }
 
  .custom-input:focus {
-   border-color: #4CAF50;
+   border-color: #2100c9;
    outline: none;
  }
 
