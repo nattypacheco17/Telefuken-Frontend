@@ -22,11 +22,17 @@ export interface Room {
 export class RoomService {
   private socket: Socket;
   private currentRoom = new BehaviorSubject<Room | null>(null);
-  private readonly SERVER_URL = 'http://localhost:3000';
+  private readonly SERVER_URL = 'https://tesis.apps-sebas.org';
 
   constructor() {
-    this.socket = io(this.SERVER_URL);
+    this.socket = io(this.SERVER_URL, {
+      transports: ['websocket'], // Fuerza WebSockets
+      reconnectionAttempts: 5, // Intenta reconectar 5 veces
+      reconnectionDelay: 1000, // Espera 1s entre intentos
+    });
+
     this.setupSocketListeners();
+
   }
 
   private setupSocketListeners() {
@@ -227,5 +233,5 @@ export class RoomService {
     });
   }
 
-  
+
 }

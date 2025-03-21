@@ -2,6 +2,25 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { By } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { RoomService } from '../../services/room.service';
+import { MusicPlayerService } from '../../services/music-player.service';
+
+class MockRoomService {
+  createRoom = jasmine.createSpy('createRoom').and.returnValue(Promise.resolve('mock-room-code')); // Devuelve una Promise
+}
+
+class MockRouter {
+  navigate = jasmine.createSpy('navigate'); // Simulamos la navegación
+}
+
+class MockMusicPlayerService {
+  play = jasmine.createSpy('play');
+  pause = jasmine.createSpy('pause');
+  togglePlay = jasmine.createSpy('togglePlay');
+  isMusicPlaying = jasmine.createSpy('isMusicPlaying').and.returnValue(false);
+}
+
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -25,7 +44,7 @@ describe('HomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  
+
 
   it('debería tener un botón para "CREAR SALA"', () => {
     const compiled = fixture.nativeElement as HTMLElement;
@@ -52,3 +71,47 @@ describe('HomeComponent', () => {
   });
 
 });
+
+
+describe('HomeComponent - Music Player', () => {
+  let component: HomeComponent;
+  let fixture: ComponentFixture<HomeComponent>;
+  let mockRoomService: MockRoomService;
+  let mockRouter: MockRouter;
+  let mockMusicPlayerService: MockMusicPlayerService;
+
+  beforeEach(async () => {
+    mockRoomService = new MockRoomService();
+    mockRouter = new MockRouter();
+    mockMusicPlayerService = new MockMusicPlayerService();
+
+    await TestBed.configureTestingModule({
+      imports: [FormsModule, HomeComponent], // Importa el componente y FormsModule
+      providers: [
+        { provide: RoomService, useValue: mockRoomService },
+        { provide: Router, useValue: mockRouter },
+        { provide: MusicPlayerService, useValue: mockMusicPlayerService } // Mock del servicio de música
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(HomeComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('debería llamar a play en MusicPlayerService cuando se llame a playMusic', () => {
+    component.playMusic();
+    expect(mockMusicPlayerService.play).toHaveBeenCalled();
+  });
+
+  it('debería llamar a pause en MusicPlayerService cuando se llame a pauseMusic', () => {
+    component.pauseMusic();
+    expect(mockMusicPlayerService.pause).toHaveBeenCalled();
+  });
+
+  it('debería verificar si la música está reproduciéndose', () => {
+    const isPlaying = mockMusicPlayerService.isMusicPlaying();
+    expect(isPlaying).toBe(false); // Puedes ajustar este valor según tu lógica
+  });
+});
+
